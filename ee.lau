@@ -1,0 +1,99 @@
+-- ===== FIESTA PHONK CON ALTAVOCES QUE REBOTAN AL RITMO =====
+
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+
+-- ==== Música Phonk ====
+local phonk = Instance.new("Sound")
+phonk.SoundId = "rbxassetid://16190782181" -- HR - EEYUH!
+phonk.Volume = 1
+phonk.Looped = true
+phonk.PlayOnRemove = false
+phonk.Parent = Workspace
+phonk:Play()
+
+-- ==== Función para crear altavoces que rebotan ====
+local function crearAltavoz(pos)
+    local speaker = Instance.new("Part")
+    speaker.Size = Vector3.new(10,12,5)
+    speaker.Position = pos
+    speaker.Anchored = true
+    speaker.BrickColor = BrickColor.new("Really black")
+    speaker.Material = Enum.Material.Metal
+    speaker.Parent = Workspace
+
+    -- Cruz frontal
+    local cruz = Instance.new("Part")
+    cruz.Size = Vector3.new(1,1,0.5)
+    cruz.Position = pos + Vector3.new(0,0,2.5)
+    cruz.Anchored = true
+    cruz.BrickColor = BrickColor.new("Really red")
+    cruz.Parent = Workspace
+
+    local cruz2 = cruz:Clone()
+    cruz2.Size = Vector3.new(0.5,6,0.5)
+    cruz2.Position = pos + Vector3.new(0,0,2.5)
+    cruz2.Parent = Workspace
+
+    -- Luz parpadeante
+    local light = Instance.new("PointLight")
+    light.Color = Color3.fromRGB(255,0,255)
+    light.Brightness = 6
+    light.Range = 35
+    light.Parent = speaker
+
+    -- Partículas
+    local particles = Instance.new("ParticleEmitter")
+    particles.Texture = "rbxassetid://243660364"
+    particles.Rate = 200
+    particles.Lifetime = NumberRange.new(1)
+    particles.Speed = NumberRange.new(10)
+    particles.Size = NumberSequence.new(2)
+    particles.Color = ColorSequence.new(Color3.fromRGB(255,0,255), Color3.fromRGB(0,255,255))
+    particles.Parent = speaker
+
+    -- Humo
+    local smoke = Instance.new("Smoke")
+    smoke.Color = Color3.fromRGB(200,0,255)
+    smoke.Opacity = 0.3
+    smoke.Size = 12
+    smoke.RiseVelocity = 6
+    smoke.Parent = speaker
+
+    -- Rebote al ritmo de la música
+    RunService.Heartbeat:Connect(function()
+        -- simulamos rebote random ligero
+        local intensidad = math.sin(tick()*10) * 2
+        speaker.Position = Vector3.new(pos.X, pos.Y + intensidad, pos.Z)
+    end)
+
+    return speaker
+end
+
+-- ==== Crear altavoces alrededor del centro ====
+local centro = Vector3.new(0,3,0)
+crearAltavoz(centro + Vector3.new(20,0,0))
+crearAltavoz(centro + Vector3.new(-20,0,0))
+
+-- ==== Disco central con luces parpadeantes ====
+local disco = Instance.new("Part")
+disco.Size = Vector3.new(15,1,15)
+disco.Position = centro
+disco.Anchored = true
+disco.BrickColor = BrickColor.new("Really black")
+disco.Material = Enum.Material.Neon
+disco.Parent = Workspace
+
+local discoLight = Instance.new("PointLight")
+discoLight.Color = Color3.fromRGB(0,255,255)
+discoLight.Brightness = 8
+discoLight.Range = 40
+discoLight.Parent = disco
+
+-- Luz parpadeante al ritmo
+RunService.Heartbeat:Connect(function()
+    discoLight.Brightness = 6 + math.random()*6
+    discoLight.Color = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
+end)
+
+print("🎉 FIESTA PHONK CON ALTAVOCES REBOTANDO LISTA EN KRNL 🔥🎧")
