@@ -1,0 +1,96 @@
+-- ===== FIESTA PHONK GLOBAL (VISIBLE PARA TODOS) =====
+
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local Debris = game:GetService("Debris")
+
+-- ==== Música Phonk (suena global para todos) ====
+local phonk = Instance.new("Sound")
+phonk.SoundId = "rbxassetid://16190782181" -- HR - EEYUH!
+phonk.Volume = 5
+phonk.Looped = true
+phonk.Parent = Workspace
+phonk:Play()
+
+-- ==== Función para crear altavoces visibles ====
+local function crearAltavoz(pos)
+    local speaker = Instance.new("Part")
+    speaker.Size = Vector3.new(3,7,3)
+    speaker.Position = pos
+    speaker.Anchored = true
+    speaker.Material = Enum.Material.Metal
+    speaker.BrickColor = BrickColor.new("Really black")
+    speaker.Parent = Workspace
+
+    local light = Instance.new("PointLight")
+    light.Color = Color3.fromRGB(255,0,255)
+    light.Brightness = 8
+    light.Range = 30
+    light.Parent = speaker
+
+    -- Rebote al ritmo
+    RunService.Heartbeat:Connect(function()
+        local intensidad = math.sin(tick()*10) * 1
+        speaker.Position = Vector3.new(pos.X, pos.Y + intensidad, pos.Z)
+    end)
+
+    return speaker
+end
+
+-- ==== Altavoces ====
+crearAltavoz(Vector3.new(15,3,0))
+crearAltavoz(Vector3.new(-15,3,0))
+
+-- ==== Disco central ====
+local disco = Instance.new("Part")
+disco.Size = Vector3.new(14,1,14)
+disco.Position = Vector3.new(0,2,0)
+disco.Anchored = true
+disco.Material = Enum.Material.Neon
+disco.Color = Color3.fromRGB(0,255,255)
+disco.Parent = Workspace
+
+local discoLight = Instance.new("PointLight")
+discoLight.Brightness = 10
+discoLight.Range = 50
+discoLight.Parent = disco
+
+RunService.Heartbeat:Connect(function()
+    disco.Color = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
+end)
+
+-- ==== Fuegos artificiales visibles ====
+local function crearFuegos(pos)
+    local firework = Instance.new("Part")
+    firework.Size = Vector3.new(1,1,1)
+    firework.Anchored = true
+    firework.Position = pos
+    firework.Transparency = 1
+    firework.Parent = Workspace
+
+    local explosion = Instance.new("Explosion")
+    explosion.Position = pos
+    explosion.BlastRadius = 5
+    explosion.BlastPressure = 0
+    explosion.Visible = true
+    explosion.Parent = firework
+
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://138186576" -- sonido fuegos
+    sound.Volume = 2
+    sound.Parent = firework
+    sound:Play()
+
+    Debris:AddItem(firework,2)
+end
+
+spawn(function()
+    while true do
+        local x = math.random(-20,20)
+        local z = math.random(-20,20)
+        crearFuegos(Vector3.new(x,15,z))
+        wait(3)
+    end
+end)
+
+print("🎉 FIESTA PHONK GLOBAL VISIBLE PARA TODOS 🔥")
