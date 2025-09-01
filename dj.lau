@@ -1,0 +1,44 @@
+-- Script para el DJ Set
+-- Requiere:
+-- - Un humanoide o R15/R6 con Animator en el personaje DJ
+-- - Animaciones creadas en el Animation Editor (sube una de DJ moviendo manos)
+-- - Un objeto Sound llamado "Music" dentro del set
+-- - Partes llamadas "Equalizer1", "Equalizer2", etc. para el ecualizador
+
+local music = script.Parent:WaitForChild("Music")
+local lights = script.Parent:GetChildren()
+local character = script.Parent:WaitForChild("DJCharacter") -- Modelo del DJ
+local humanoid = character:WaitForChild("Humanoid")
+local animator = humanoid:WaitForChild("Animator")
+
+-- Cargar animación (tienes que reemplazar el AnimationId con tu animación subida)
+local animation = Instance.new("Animation")
+animation.AnimationId = "rbxassetid://TU_ANIMACION_DE_DJ"
+local animTrack = animator:LoadAnimation(animation)
+
+-- Reproducir música y animación
+music.Looped = true
+music:Play()
+animTrack.Looped = true
+animTrack:Play()
+
+-- Efectos de luces y altavoces
+while true do
+	-- Luces locas
+	for _, obj in ipairs(lights) do
+		if obj:IsA("PointLight") or obj:IsA("SurfaceLight") then
+			obj.Color = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
+			obj.Brightness = math.random(2,6)
+		end
+	end
+
+	-- Ecualizador que sube y baja
+	for i = 1,5 do
+		local part = script.Parent:FindFirstChild("Equalizer"..i)
+		if part then
+			local scale = math.random(2,10)
+			part.Size = Vector3.new(part.Size.X, scale, part.Size.Z)
+		end
+	end
+	wait(0.3)
+end
