@@ -1,0 +1,110 @@
+-- 🌌🔥 Script: Volar con fuego y aura RGB
+-- Funciona en KRNL
+
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+local mouse = plr:GetMouse()
+local flying = false
+local speed = 50 -- velocidad de vuelo
+
+-- 🟠 Crear fuego y aura en el cuerpo
+local function addEffects(char)
+    -- Efecto de fuego
+    for _, part in pairs(char:GetDescendants()) do
+        if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
+            local fire = Instance.new("Fire")
+            fire.Size = 10
+            fire.Heat = 20
+            fire.Parent = part
+        end
+    end
+
+    -- Aura RGB
+    local aura = Instance.new("PointLight")
+    aura.Range = 16
+    aura.Brightness = 3
+    aura.Color = Color3.fromRGB(255,0,0)
+    aura.Parent = char:WaitForChild("HumanoidRootPart")
+
+    task.spawn(function()
+        while aura.Parent do
+            for i = 0, 255, 5 do
+                aura.Color = Color3.fromHSV(i/255, 1, 1)
+                task.wait(0.05)
+            end
+        end
+    end)
+end
+
+-- 🚀 Función para volar
+local function fly()
+    local char = plr.Character or plr.CharacterAdded:Wait()
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    local hrp = char:WaitForChild("HumanoidRootPart")
+
+    addEffects(char) -- efectos visibles para todos 😎
+
+    flying = true
+    hum.PlatformStand = true
+
+    local bodyGyro = Instance.new("BodyGyro", hrp)
+    local bodyVel = Instance.new("BodyVelocity", hrp)
+    bodyGyro.P = 9e4
+    bodyGyro.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+    bodyVel.Velocity = Vector3.new(0,0,0)
+    bodyVel.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+
+    local UIS = game:GetService("UserInputService")
+
+    while flying and char and hrp do
+        game:GetService("RunService").RenderStepped:Wait()
+        local camCF = workspace.CurrentCamera.CFrame
+        bodyGyro.CFrame = camCF
+
+        local moveVec = Vector3.new(0,0,0)
+        if UIS:IsKeyDown(Enum.KeyCode.W) then
+            moveVec = moveVec + camCF.LookVector
+        end
+        if UIS:IsKeyDown(Enum.KeyCode.S) then
+            moveVec = moveVec - camCF.LookVector
+        end
+        if UIS:IsKeyDown(Enum.KeyCode.A) then
+            moveVec = moveVec - camCF.RightVector
+        end
+        if UIS:IsKeyDown(Enum.KeyCode.D) then
+            moveVec = moveVec + camCF.RightVector
+        end
+        if UIS:IsKeyDown(Enum.KeyCode.Space) then
+            moveVec = moveVec + Vector3.new(0,1,0)
+        end
+        if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+            moveVec = moveVec - Vector3.new(0,1,0)
+        end
+
+        bodyVel.Velocity = moveVec * speed
+    end
+
+    bodyGyro:Destroy()
+    bodyVel:Destroy()
+    hum.PlatformStand = false
+end
+
+-- 🛑 Detener el vuelo
+local function stopFlying()
+    flying = false
+end
+
+-- ⌨️ Controles
+local UIS = game:GetService("UserInputService")
+UIS.InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.F then
+        if flying then
+            stopFlying()
+        else
+            fly()
+        end
+    end
+end)
+
+print("✅ Presiona la tecla F para volar con fuego + aura RGB 🔥🌈")
