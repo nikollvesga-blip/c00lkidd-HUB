@@ -1,0 +1,48 @@
+-- 🌌 Script: Gigante moderado con poderes
+-- Hecho para KRNL
+
+local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
+
+repeat wait() until plr.Character
+local char = plr.Character
+local hum = char:FindFirstChildOfClass("Humanoid")
+
+-- 📏 Hacerte el doble de grande (visible para todos)
+local scale = 2 -- cambia este número si quieres más o menos grande
+
+hum.BodyHeightScale.Value = scale
+hum.BodyWidthScale.Value = scale
+hum.BodyDepthScale.Value = scale
+hum.HeadScale.Value = scale
+
+-- ⚡ Crear poderes en el inventario
+local function crearPoder(nombre, id)
+    local tool = Instance.new("Tool")
+    tool.Name = nombre
+    tool.RequiresHandle = false
+    tool.CanBeDropped = true
+
+    tool.Activated:Connect(function()
+        local target = char.HumanoidRootPart.Position + (char.HumanoidRootPart.CFrame.LookVector * 20)
+        local explosion = Instance.new("Explosion")
+        explosion.Position = target
+        explosion.BlastRadius = 8
+        explosion.BlastPressure = 50000
+        explosion.Parent = workspace
+
+        local s = Instance.new("Sound", workspace)
+        s.SoundId = "rbxassetid://"..id
+        s.Volume = 5
+        s:Play()
+    end)
+
+    tool.Parent = plr.Backpack
+end
+
+-- 🌠 Poderes disponibles
+crearPoder("⚡ Rayo", 138186576) -- trueno
+crearPoder("🔥 Fuego", 6026984224) -- fuego
+crearPoder("💥 Explosión", 138186576) -- explosión
+
+print("✅ Ahora eres el doble de grande y tienes poderes en tu inventario 😎")
