@@ -1,0 +1,107 @@
+-- ===== FIESTA PHONK ULTRA ÉPICA – CON ALTAVOCES GIGANTES, GIRATORIOS Y EFECTOS =====
+
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+-- ==== Música Phonk ====
+local phonk = Instance.new("Sound")
+phonk.SoundId = "rbxassetid://14145623658" -- Música phonk funcional
+phonk.Volume = 1
+phonk.Looped = true
+phonk.Parent = Workspace
+phonk:Play()
+
+-- ==== Función para crear altavoces gigantes con cruz, luces y partículas ====
+local function crearAltavoz(pos)
+    -- Bloque principal
+    local speaker = Instance.new("Part")
+    speaker.Size = Vector3.new(8,10,4)
+    speaker.Position = pos
+    speaker.Anchored = true
+    speaker.BrickColor = BrickColor.new("Really black")
+    speaker.Material = Enum.Material.Metal
+    speaker.Parent = Workspace
+
+    -- Cruz frontal
+    local cruz = Instance.new("Part")
+    cruz.Size = Vector3.new(1,1,0.5)
+    cruz.Position = pos + Vector3.new(0,0,2.25)
+    cruz.Anchored = true
+    cruz.BrickColor = BrickColor.new("Really red")
+    cruz.Parent = Workspace
+
+    local cruz2 = cruz:Clone()
+    cruz2.Size = Vector3.new(0.5,5,0.5)
+    cruz2.Position = pos + Vector3.new(0,0,2.25)
+    cruz2.Parent = Workspace
+
+    -- Luz parpadeante
+    local light = Instance.new("PointLight")
+    light.Color = Color3.fromRGB(255,0,255)
+    light.Brightness = 5
+    light.Range = 30
+    light.Parent = speaker
+
+    -- Luz parpadeando al ritmo
+    RunService.Heartbeat:Connect(function()
+        light.Brightness = 3 + math.random()*4
+        light.Color = Color3.fromRGB(math.random(150,255),0,math.random(150,255))
+    end)
+
+    -- Partículas
+    local particles = Instance.new("ParticleEmitter")
+    particles.Texture = "rbxassetid://243660364"
+    particles.Rate = 150
+    particles.Lifetime = NumberRange.new(1)
+    particles.Speed = NumberRange.new(8)
+    particles.Size = NumberSequence.new(2)
+    particles.Color = ColorSequence.new(Color3.fromRGB(255,0,255), Color3.fromRGB(0,255,255))
+    particles.Parent = speaker
+
+    -- Humo
+    local smoke = Instance.new("Smoke")
+    smoke.Color = Color3.fromRGB(200,0,255)
+    smoke.Opacity = 0.3
+    smoke.Size = 10
+    smoke.RiseVelocity = 5
+    smoke.Parent = speaker
+
+    -- Rotación del altavoz
+    local tweenInfo = TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true)
+    local goal = {Orientation = Vector3.new(0,360,0)}
+    local tween = TweenService:Create(speaker, tweenInfo, goal)
+    tween:Play()
+
+    return speaker
+end
+
+-- ==== Crear altavoces alrededor del centro ====
+local centro = Vector3.new(0,3,0)
+crearAltavoz(centro + Vector3.new(15,0,0))
+crearAltavoz(centro + Vector3.new(-15,0,0))
+crearAltavoz(centro + Vector3.new(0,0,15))
+crearAltavoz(centro + Vector3.new(0,0,-15))
+
+-- ==== Disco central con luces parpadeantes ====
+local disco = Instance.new("Part")
+disco.Size = Vector3.new(12,1,12)
+disco.Position = centro
+disco.Anchored = true
+disco.BrickColor = BrickColor.new("Really black")
+disco.Material = Enum.Material.Neon
+disco.Parent = Workspace
+
+local discoLight = Instance.new("PointLight")
+discoLight.Color = Color3.fromRGB(0,255,255)
+discoLight.Brightness = 6
+discoLight.Range = 35
+discoLight.Parent = disco
+
+-- Luz parpadeante al ritmo
+RunService.Heartbeat:Connect(function()
+    discoLight.Brightness = 4 + math.random()*4
+    discoLight.Color = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
+end)
+
+print("🎉 FIESTA PHONK ULTRA ÉPICA LISTA EN KRNL 🔥🎧")
