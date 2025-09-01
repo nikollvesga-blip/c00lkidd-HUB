@@ -1,0 +1,24 @@
+-- ===== FIESTA PHONK ÉPICA FUNCIONAL PARA KRNL =====
+
+local Workspace = game:GetService("Workspace")
+
+-- ==== Música Phonk ====
+local phonk = Instance.new("Sound")
+phonk.SoundId = "rbxassetid://TU_AUDIO_ID" -- <- Pon aquí el ID de la música phonk
+phonk.Volume = 1
+phonk.Looped = true
+phonk.Parent = Workspace
+phonk:Play()
+
+-- ==== Función para crear altavoces gigantes con luces y partículas ====
+local function crearAltavoz(pos)
+    local speaker = Instance.new("Part")
+    speaker.Size = Vector3.new(6,6,3)
+    speaker.Position = pos
+    speaker.Anchored = true
+    speaker.BrickColor = BrickColor.new("Really black")
+    speaker.Parent = Workspace
+
+    -- Luz
+    local light = Instance.new("PointLight")
+    light.Color = Color3.fromRGB(255,0
