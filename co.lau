@@ -1,0 +1,38 @@
+-- ===== SCRIPT ÉPICO C00LKIDD VOLANDO + PODERES =====
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local rootPart = character:WaitForChild("HumanoidRootPart")
+
+-- ==== Skin de c00lkidd ====
+local shirt = Instance.new("Shirt")
+shirt.ShirtTemplate = "rbxassetid://ID_SHIRT_C00LKIDD" -- <- Pon aquí tu ID
+shirt.Parent = character
+
+local pants = Instance.new("Pants")
+pants.PantsTemplate = "rbxassetid://ID_PANTS_C00LKIDD" -- <- Pon aquí tu ID
+pants.Parent = character
+
+-- ==== Animación caminar volando ====
+local flyAnim = Instance.new("Animation")
+flyAnim.AnimationId = "rbxassetid://ID_ANIMACION_VOLAR" -- <- Pon aquí tu animación de volar
+local flyTrack = humanoid:LoadAnimation(flyAnim)
+flyTrack:Play()
+
+-- ==== Poderes en inventario ====
+local poderes = {"BolaDeFuego", "Rayo", "Escudo"} -- puedes personalizar
+for i, poder in pairs(poderes) do
+    local tool = Instance.new("Tool")
+    tool.Name = poder
+    tool.Parent = player.Backpack
+end
+
+-- ==== Luz épica en personaje ====
+local light = Instance.new("PointLight")
+light.Color = Color3.fromRGB(0,255,255)
+light.Range = 15
+light.Brightness = 2
+light.Parent = rootPart
+
+print("🚀 Skin c00lkidd activa, volando y con poderes listos!")
