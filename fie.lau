@@ -1,0 +1,146 @@
+-- ===== FIESTA PHONK ÉPICA CON TU SKIN =====
+
+local Workspace = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local Debris = game:GetService("Debris")
+
+-- ==== Música Phonk ====
+local phonk = Instance.new("Sound")
+phonk.SoundId = "rbxassetid://16190782181" -- HR - EEYUH!
+phonk.Volume = 1
+phonk.Looped = true
+phonk.Parent = Workspace
+phonk:Play()
+
+-- ==== Función para crear altavoces realistas ====
+local function crearAltavoz(pos)
+    local speaker = Instance.new("Part")
+    speaker.Size = Vector3.new(2,6,2)
+    speaker.Position = pos
+    speaker.Anchored = true
+    speaker.Material = Enum.Material.Metal
+    speaker.BrickColor = BrickColor.new("Really black")
+    speaker.Parent = Workspace
+
+    -- Rejilla frontal
+    local grill = Instance.new("SurfaceGui", speaker)
+    grill.Face = Enum.NormalId.Front
+    local frame = Instance.new("Frame", grill)
+    frame.Size = UDim2.new(1,0,1,0)
+    frame.BackgroundColor3 = Color3.fromRGB(50,50,50)
+    frame.BorderSizePixel = 0
+
+    -- Luz parpadeante
+    local light = Instance.new("PointLight")
+    light.Color = Color3.fromRGB(255,0,255)
+    light.Brightness = 6
+    light.Range = 20
+    light.Parent = speaker
+
+    -- Partículas
+    local particles = Instance.new("ParticleEmitter")
+    particles.Texture = "rbxassetid://243660364"
+    particles.Rate = 150
+    particles.Lifetime = NumberRange.new(1)
+    particles.Speed = NumberRange.new(6)
+    particles.Size = NumberSequence.new(1.5)
+    particles.Color = ColorSequence.new(Color3.fromRGB(255,0,255), Color3.fromRGB(0,255,255))
+    particles.Parent = speaker
+
+    -- Humo
+    local smoke = Instance.new("Smoke")
+    smoke.Color = Color3.fromRGB(200,0,255)
+    smoke.Opacity = 0.3
+    smoke.Size = 8
+    smoke.RiseVelocity = 4
+    smoke.Parent = speaker
+
+    -- Rebote al ritmo
+    RunService.Heartbeat:Connect(function()
+        local intensidad = math.sin(tick()*10) * 1.5
+        speaker.Position = Vector3.new(pos.X, pos.Y + intensidad, pos.Z)
+    end)
+
+    return speaker
+end
+
+-- ==== Crear altavoces ====
+local centro = Vector3.new(0,3,0)
+crearAltavoz(centro + Vector3.new(10,0,0))
+crearAltavoz(centro + Vector3.new(-10,0,0))
+
+-- ==== Disco central ====
+local disco = Instance.new("Part")
+disco.Size = Vector3.new(12,1,12)
+disco.Position = centro
+disco.Anchored = true
+disco.BrickColor = BrickColor.new("Really black")
+disco.Material = Enum.Material.Neon
+disco.Parent = Workspace
+
+local discoLight = Instance.new("PointLight")
+discoLight.Color = Color3.fromRGB(0,255,255)
+discoLight.Brightness = 8
+discoLight.Range = 40
+discoLight.Parent = disco
+
+RunService.Heartbeat:Connect(function()
+    discoLight.Brightness = 6 + math.random()*6
+    discoLight.Color = Color3.fromRGB(math.random(0,255), math.random(0,255), math.random(0,255))
+end)
+
+-- ==== Crear DJ con tu skin ====
+local player = Players.LocalPlayer
+local dj = player.Character or player.CharacterAdded:Wait()
+dj:SetPrimaryPartCFrame(CFrame.new(centro + Vector3.new(0,3,0)))
+
+-- Animación simple de brazos levantados
+RunService.Heartbeat:Connect(function()
+    local tiempo = tick()
+    if dj:FindFirstChild("UpperTorso") then
+        dj.UpperTorso.CFrame = CFrame.new(dj.UpperTorso.Position) * CFrame.Angles(0, math.sin(tiempo*2)*0.2, 0)
+    end
+    if dj:FindFirstChild("LeftUpperArm") then
+        dj.LeftUpperArm.CFrame = CFrame.new(dj.LeftUpperArm.Position) * CFrame.Angles(math.sin(tiempo*3)*0.5,0,0)
+    end
+    if dj:FindFirstChild("RightUpperArm") then
+        dj.RightUpperArm.CFrame = CFrame.new(dj.RightUpperArm.Position) * CFrame.Angles(math.sin(tiempo*3)*0.5,0,0)
+    end
+end)
+
+-- ==== Fuegos artificiales ====
+local function crearFuegos(pos)
+    local firework = Instance.new("Part")
+    firework.Size = Vector3.new(1,1,1)
+    firework.Anchored = true
+    firework.Position = pos
+    firework.Transparency = 1
+    firework.Parent = Workspace
+
+    local explosion = Instance.new("Explosion")
+    explosion.Position = pos
+    explosion.BlastRadius = 5
+    explosion.BlastPressure = 0
+    explosion.Visible = false
+    explosion.Parent = firework
+
+    local sound = Instance.new("Sound")
+    sound.SoundId = "rbxassetid://138186576"
+    sound.Volume = 1
+    sound.Parent = firework
+    sound:Play()
+
+    Debris:AddItem(firework,2)
+end
+
+spawn(function()
+    while true do
+        local x = math.random(-15,15)
+        local z = math.random(-15,15)
+        crearFuegos(Vector3.new(x,10,z))
+        wait(2)
+    end
+end)
+
+print("🎉 FIESTA PHONK ÉPICA CON TU SKIN LISTA EN KRNL 🔥🎧")
